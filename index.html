@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Gran Empresa - Dashboard Almacén</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <style>
+        .custom-card { border: 2px solid #333; border-radius: 40px; padding: 30px; background: white; }
+        .bg-blue { background-color: #007bff; color: white; border-radius: 15px; }
+        .seccion { display: none; }
+        .seccion.activa { display: block; }
+        .form-container-azul {
+            background-color: white; border: 2px solid #ccc; border-radius: 50px;
+            padding: 40px; max-width: 850px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin: 20px auto; text-align: left;
+        }
+        .row-custom { display: flex; align-items: center; margin-bottom: 25px; gap: 20px; }
+        .label-custom { font-size: 18px; color: #333; min-width: 180px; }
+        .input-custom { padding: 8px 15px; border: 1px solid #333; border-radius: 10px; font-size: 16px; outline: none; }
+        .btn-azul-especial {
+            padding: 15px 40px; border-radius: 15px; border: none; color: white;
+            font-size: 20px; font-weight: bold; background-color: #008cff;
+            box-shadow: 0 4px 2px #007bff7a; min-width: 220px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#" onclick="navegar('inicio')">
+                <i class="bi bi-buildings me-2"></i>LA GRAN EMPRESA
+            </a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Catálogos</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="abrirCatalogo('Productos')">Productos</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="abrirCatalogo('Proveedores')">Proveedores</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Documentos</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="abrirDocumento('Entrada')">Entradas</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="abrirDocumento('Salida')">Salidas</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        
+        <div id="vista-inicio" class="seccion activa text-center p-5">
+            <h1 class="display-3 fw-bold">Sistema de Almacén</h1>
+            <p class="lead">Bienvenido al control de inventarios.</p>
+        </div>
+
+        <div id="vista-catalogos" class="seccion">
+            <div class="custom-card shadow mx-auto" style="max-width: 600px;">
+                <h2 id="titulo-catalogo" class="text-center mb-4">Catálogo</h2>
+                <form id="formCatalogo">
+                    <div class="mb-3">
+                        <label class="fw-bold">Clave / Nombre</label>
+                        <input type="text" id="cat-nombre" class="form-control" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="fw-bold">Descripción / Contacto</label>
+                        <input type="text" id="cat-desc" class="form-control">
+                    </div>
+                    <div class="d-flex justify-content-center gap-3">
+                        <button type="submit" class="btn bg-blue px-4">Guardar en DB</button>
+                        <button type="button" class="btn btn-secondary px-4" onclick="navegar('inicio')">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="vista-documentos" class="seccion">
+            <div class="custom-card shadow mb-4">
+                <h3 id="titulo-doc" class="mb-4">Documento</h3>
+                <div class="row g-3 text-start">
+                    <div class="col-md-3">
+                        <label class="fw-bold">No. Documento</label>
+                        <input type="text" id="doc-numero" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="fw-bold">Fecha</label>
+                        <input type="date" id="doc-fecha" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="fw-bold">Tipo</label>
+                        <input type="text" id="doc-tipo" class="form-control bg-light" readonly>
+                    </div>
+                    <div class="col-md-3">
+                        <label id="lbl-entidad" class="fw-bold">Entidad</label>
+                        <input type="text" id="doc-entidad" class="form-control" placeholder="Nombre...">
+                    </div>
+                </div>
+
+                <div class="table-responsive mt-4">
+                    <table class="table table-bordered text-center">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>#</th>
+                                <th>Producto</th>
+                                <th>Cant.</th>
+                                <th>Precio U.</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-movimientos">
+                            </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="4" class="text-end">TOTAL:</th>
+                                <th id="doc-total">$0.00</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button class="btn btn-success px-4" data-bs-toggle="modal" data-bs-target="#modalProd">
+                        <i class="bi bi-plus-circle me-1"></i> Agregar Producto
+                    </button>
+                    <button class="btn bg-blue px-4" onclick="guardarDocumentoCompleto()">
+                        <i class="bi bi-save me-1"></i> Guardar Documento
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalProd" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content p-4">
+                <h4 class="text-center fw-bold mb-4">AGREGAR MOVIMIENTO</h4>
+                <div class="mb-3">
+                    <label>Producto (Nombre o ID)</label>
+                    <input type="text" id="m-prod" class="form-control" style="background:#fff9c4">
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label>Precio</label>
+                        <input type="number" id="m-precio" class="form-control">
+                    </div>
+                    <div class="col-6">
+                        <label>Cantidad</label>
+                        <input type="number" id="m-cant" class="form-control">
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label>Subtotal</label>
+                    <input type="text" id="m-sub" class="form-control bg-light" readonly>
+                </div>
+                <div class="d-flex justify-content-center gap-2">
+                    <button class="btn bg-blue px-4" onclick="agregarMovimiento()">Aceptar</button>
+                    <button class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="apps.js"></script> </body>
+</html>
