@@ -35,7 +35,7 @@ document.getElementById('formCatalogo').addEventListener('submit', function(e) {
         descripcion: document.getElementById('cat-desc').value
     };
 
-    fetch(`http://localhost:3000/api/catalogos/${tabla}`, {
+    fetch(`/api/catalogos/${tabla}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(datos)
@@ -138,7 +138,7 @@ function guardarDocumentoCompleto() {
         return;
     }
 
-    fetch('http://localhost:3000/api/guardar-documento', {
+    fetch('/api/guardar-documento', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dataFinal)
