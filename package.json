@@ -1,4 +1,8 @@
 {
+  "main": "api/index.js",
+  "type": "module"
+}
+{
   "name": "act-7-reporte-sistema-v2",
   "version": "1.0.0",
   "description": "",
