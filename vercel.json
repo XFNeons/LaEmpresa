@@ -1,5 +1,21 @@
-{\n  "version": 1,\n  "builds": [\n    {\n      "src": "api/index.js",\n      "use": "@vercel/node"\n    }\n  ],\n  "routes": [\n    {\n      "src": "^/server.js",
-      "dest": "/api/index.js"
-    },\n    {\n      "src": "^/public/index.html",
-      "dest": "/api/index.js"
-    }\n  ]\n}
+{
+  "build": {
+    "use": "@vercel/node",
+    "config": {
+      "includeFiles": ["*/.json"]
+    }
+  },
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/api/index.js" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, PUT, DELETE, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" }
+      ]
+    }
+  ]
+}
